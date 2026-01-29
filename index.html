@@ -25,15 +25,17 @@
         textarea { height: 70px; resize: vertical; }
         .goal-input { margin-bottom: 10px; border-left: 3px solid #3498db !important; }
         
-        .actions { position: sticky; bottom: 20px; display: flex; gap: 10px; }
-        button { flex: 1; color: white; padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .actions { position: sticky; bottom: 20px; display: flex; gap: 10px; z-index: 100; }
+        button { flex: 1; color: white; padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.2s; }
+        button:active { transform: scale(0.98); }
         .btn-print { background: linear-gradient(to right, #1a2a6c, #b21f1f); }
         .btn-reset { background: #95a5a6; font-size: 14px; flex: 0.3; }
         
         @media print { 
-            .actions, .subtitle, p { display: none !important; } 
+            .actions, .subtitle, .btn-reset, p { display: none !important; } 
             body { background-color: white; padding: 0; }
             .card { box-shadow: none; border: 1px solid #eee; break-inside: avoid; margin-bottom: 10px; padding: 20px; }
+            textarea { border: none; height: auto; }
         }
     </style>
 </head>
@@ -44,8 +46,8 @@
 
     <div class="card">
         <div class="header-fields">
-            <div><label>Prénom et Nom</label><input type="text" id="user-name" class="save-me"></div>
-            <div><label>Date du jour</label><input type="date" id="currentDate" class="save-me"></div>
+            <div><label>Prénom et Nom</label><input type="text" id="user-fullname" class="auto-save"></div>
+            <div><label>Date du jour</label><input type="date" id="doc-date" class="auto-save"></div>
         </div>
     </div>
 
@@ -56,68 +58,30 @@
 
     <div class="card">
         <h2>2. Leçons Apprises</h2>
-        <div class="field"><label>Mes plus grandes réussites :</label><textarea id="l1" class="save-me"></textarea></div>
-        <div class="field"><label>Ce qui m'a fait du bien :</label><textarea id="l2" class="save-me"></textarea></div>
-        <div class="field"><label>Mon impact / Pour les autres :</label><textarea id="l3" class="save-me"></textarea></div>
-        <div class="field"><label>Ce que j'aurais aimé éviter :</label><textarea id="l4" class="save-me"></textarea></div>
-        <div class="field"><label>Mes plus grands challenges :</label><textarea id="l5" class="save-me"></textarea></div>
-        <div class="field"><label>Apprentissages sur moi-même :</label><textarea id="l6" class="save-me"></textarea></div>
+        <div class="field"><label>Mes plus grandes réussites :</label><textarea id="lessons-1" class="auto-save"></textarea></div>
+        <div class="field"><label>Ce qui m'a fait du bien :</label><textarea id="lessons-2" class="auto-save"></textarea></div>
+        <div class="field"><label>Mon impact / Pour les autres :</label><textarea id="lessons-3" class="auto-save"></textarea></div>
+        <div class="field"><label>Ce que j'aurais aimé éviter :</label><textarea id="lessons-4" class="auto-save"></textarea></div>
+        <div class="field"><label>Mes plus grands challenges :</label><textarea id="lessons-5" class="auto-save"></textarea></div>
+        <div class="field"><label>Apprentissages sur moi-même :</label><textarea id="lessons-6" class="auto-save"></textarea></div>
     </div>
 
     <div class="card">
         <h2>3. Mes Intentions & Buts</h2>
-        <div class="field"><label>Le but essentiel de ma vie :</label><textarea id="mission" class="save-me"></textarea></div>
+        <div class="field"><label>Le but essentiel de ma vie :</label><textarea id="mission-life" class="auto-save"></textarea></div>
         <div class="field"><label>Mes 3 buts à long terme (5-10 ans) :</label>
-            <input type="text" id="bl1" class="goal-input save-me"><input type="text" id="bl2" class="goal-input save-me"><input type="text" id="bl3" class="goal-input save-me">
+            <input type="text" id="lt-goal-1" class="goal-input auto-save">
+            <input type="text" id="lt-goal-2" class="goal-input auto-save">
+            <input type="text" id="lt-goal-3" class="goal-input auto-save">
         </div>
         <div class="field"><label>Mes 3 buts prioritaires pour l'année :</label>
-            <input type="text" id="ba1" class="goal-input save-me" style="border-left-color:#27ae60!important;"><input type="text" id="ba2" class="goal-input save-me" style="border-left-color:#27ae60!important;"><input type="text" id="ba3" class="goal-input save-me" style="border-left-color:#27ae60!important;">
+            <input type="text" id="yr-goal-1" class="goal-input auto-save" style="border-left-color:#27ae60!important;">
+            <input type="text" id="yr-goal-2" class="goal-input auto-save" style="border-left-color:#27ae60!important;">
+            <input type="text" id="yr-goal-3" class="goal-input auto-save" style="border-left-color:#27ae60!important;">
         </div>
     </div>
 
     <div class="actions">
         <button class="btn-print" onclick="window.print()">Exporter en PDF / Imprimer</button>
-        <button class="btn-reset" onclick="if(confirm('Effacer toutes les données ?')) { localStorage.clear(); location.reload(); }">Réinitialiser</button>
+        <button class="btn-reset" onclick="resetApp()">Réinitialiser tout</button>
     </div>
-
-    <script>
-        const domaines = ["🩺 Santé", "💰 Finances", "💼 Vie Pro", "🌹 Couple", "🏠 Famille", "🤝 Amis", "🎨 Passions", "🧘 Spiritualité"];
-        const container = document.getElementById('bilan-secteur');
-
-        domaines.forEach((d, i) => {
-            container.innerHTML += `
-                <div class="field">
-                    <label>${d}</label>
-                    <div class="slider-container">
-                        <input type="range" min="1" max="10" value="5" id="range-${i}" class="save-me" oninput="document.getElementById('val-${i}').innerText = this.value">
-                        <span class="note-display" id="val-${i}">5</span>
-                    </div>
-                    <textarea id="text-dom-${i}" class="save-me" placeholder="Note tes faits marquants..."></textarea>
-                </div>`;
-        });
-
-        // --- SYSTÈME DE SAUVEGARDE AUTO ---
-        const inputs = document.querySelectorAll('.save-me');
-        
-        // Charger les données
-        inputs.forEach(input => {
-            const savedValue = localStorage.getItem(input.id);
-            if (savedValue) {
-                input.value = savedValue;
-                if(input.type === 'range') {
-                    const idVal = input.id.replace('range-', 'val-');
-                    document.getElementById(idVal).innerText = savedValue;
-                }
-            }
-            // Écouter les changements
-            input.addEventListener('input', () => {
-                localStorage.setItem(input.id, input.value);
-            });
-        });
-
-        if(!document.getElementById('currentDate').value) {
-            document.getElementById('currentDate').valueAsDate = new Date();
-        }
-    </script>
-</body>
-</html>
