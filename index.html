@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>L'Écologie Consciente - Mathieu Barbaud</title>
+    <title>mon appli consciente - Mathieu</title>
     <style>
         :root { --primary: #1a2a6c; --secondary: #b21f1f; --accent: #27ae60; --bg: #f0f2f5; }
         body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; background-color: var(--bg); }
@@ -77,4 +77,75 @@
         </div>
     </div>
 
-    <div class="actions
+    <div class="actions">
+        <button class="btn-main" onclick="window.print()">Exporter en PDF</button>
+    </div>
+
+    <script>
+        // NAVIGATION
+        function openModule(id, btn) {
+            document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        // INITIALISATION BILAN
+        const domaines = ["🩺 Santé", "💰 Finances", "💼 Vie Pro", "🌹 Couple", "🏠 Famille", "🤝 Amis", "🎨 Passions", "🧘 Spiritualité"];
+        const bContainer = document.getElementById('bilan-container');
+        domaines.forEach((d, i) => {
+            bContainer.innerHTML += `
+                <div class="field">
+                    <label>${d}</label>
+                    <div class="slider-container">
+                        <input type="range" min="1" max="10" value="5" id="sl-${i}" class="auto-save" oninput="document.getElementById('vsl-${i}').innerText = this.value">
+                        <span class="note-display" id="vsl-${i}">5</span>
+                    </div>
+                    <textarea id="tsl-${i}" class="auto-save" placeholder="Notes..."></textarea>
+                </div>`;
+        });
+
+        // GESTION SADHANA
+        const dateKey = new Date().toISOString().split('T')[0];
+        let habits = JSON.parse(localStorage.getItem('habits_v3')) || [];
+        let statusToday = JSON.parse(localStorage.getItem('status_' + dateKey)) || {};
+
+        function renderHabits() {
+            const list = document.getElementById('sadhana-list');
+            list.innerHTML = '';
+            habits.forEach(h => {
+                const done = statusToday[h.id] || false;
+                list.innerHTML += `
+                    <div class="sadhana-item ${done ? 'done' : ''}">
+                        <input type="checkbox" ${done ? 'checked' : ''} onclick="toggleHabit('${h.id}')">
+                        <span>${h.name} <span class="tag tag-daily">Quotidien</span></span>
+                        <button onclick="removeHabit('${h.id}')" style="background:none;border:none;color:red;cursor:pointer">✕</button>
+                    </div>`;
+            });
+            localStorage.setItem('habits_v3', JSON.stringify(habits));
+            localStorage.setItem('status_' + dateKey, JSON.stringify(statusToday));
+        }
+
+        function addHabit() {
+            const val = document.getElementById('new-habit-name').value;
+            if(val) {
+                habits.push({ id: 'h' + Date.now(), name: val });
+                document.getElementById('new-habit-name').value = '';
+                renderHabits();
+            }
+        }
+
+        function toggleHabit(id) { statusToday[id] = !statusToday[id]; renderHabits(); }
+        function removeHabit(id) { habits = habits.filter(h => h.id !== id); renderHabits(); }
+
+        // AUTO SAVE
+        document.querySelectorAll('.auto-save').forEach(input => {
+            input.value = localStorage.getItem(input.id) || (input.type === 'range' ? 5 : '');
+            if(input.type === 'range') document.getElementById('vsl-' + input.id.split('-')[1]).innerText = input.value;
+            input.addEventListener('input', () => localStorage.setItem(input.id, input.value));
+        });
+
+        window.onload = renderHabits;
+    </script>
+</body>
+</html>
