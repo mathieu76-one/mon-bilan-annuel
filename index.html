@@ -3,110 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>L'Écologie Consciente - Mathieu Barbaud</title>
+    <title>Mon Application Vision & Sadhana</title>
     <style>
         :root { --primary: #1a2a6c; --secondary: #b21f1f; --accent: #27ae60; --bg: #f0f2f5; }
-        body { font-family: 'Segoe UI', sans-serif; line-height: 1.5; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; background-color: var(--bg); }
+        body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; background-color: var(--bg); }
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        h1 { color: var(--primary); text-align: center; margin-bottom: 5px; }
+        .date-badge { text-align: center; font-weight: bold; color: var(--secondary); margin-bottom: 20px; font-size: 1.1em; }
+        h2 { color: var(--secondary); border-left: 5px solid #fdbb2d; padding-left: 15px; }
         
-        /* Navigation */
-        .main-menu { display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; sticky; top: 10px; z-index: 100; }
-        .menu-btn { padding: 12px 25px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.3s; background: white; color: var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .menu-btn.active { background: var(--primary); color: white; }
-
-        .module { display: none; }
-        .module.active { display: block; animation: fadeIn 0.4s; }
-
-        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); margin-bottom: 25px; }
-        h1 { color: var(--primary); text-align: center; margin-bottom: 10px; }
-        h2 { color: var(--secondary); border-left: 5px solid #fdbb2d; padding-left: 15px; margin-top: 0; margin-bottom: 20px; font-size: 1.4em; }
+        .field { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; }
+        input[type="text"] { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
         
-        .field { margin-bottom: 25px; }
-        label { display: block; font-weight: bold; margin-bottom: 8px; color: #2c3e50; }
-        
-        .slider-container { display: flex; align-items: center; gap: 15px; background: #f9f9f9; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
-        input[type="range"] { flex-grow: 1; accent-color: var(--secondary); }
-        .note-display { font-weight: bold; color: var(--secondary); min-width: 30px; font-size: 1.1em; }
-
-        textarea, input[type="text"] { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; font-size: 0.95em; }
-        textarea { height: 100px; line-height: 1.4; }
-        
-        /* Sadhana Items */
-        .sadhana-item { display: flex; align-items: center; background: #f9f9f9; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee; }
+        .sadhana-item { display: flex; align-items: center; background: #f9f9f9; padding: 12px 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee; transition: 0.3s; }
         .sadhana-item.done { background: #e8f5e9; border-color: var(--accent); opacity: 0.8; }
-        .sadhana-item input[type="checkbox"] { width: 22px; height: 22px; cursor: pointer; accent-color: var(--accent); }
+        .sadhana-item input[type="checkbox"] { width: 24px; height: 24px; cursor: pointer; accent-color: var(--accent); }
         .sadhana-item span { flex-grow: 1; margin-left: 15px; font-weight: 500; }
+        
+        .tag { padding: 2px 8px; border-radius: 4px; font-size: 0.75em; margin-left: 10px; font-weight: bold; text-transform: uppercase; }
+        .tag-daily { background: #e8f4fd; color: #2980b9; }
+        .tag-weekly { background: #fef9e7; color: #f39c12; }
 
-        .btn-main { background: var(--primary); color: white; padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
-        .btn-add { background: var(--accent); margin-top: 10px; }
-        .btn-del { background: none; border: none; color: #e74c3c; cursor: pointer; font-size: 1.2em; padding: 0 10px; }
+        .add-habit { display: flex; gap: 10px; margin-top: 20px; background: #eee; padding: 15px; border-radius: 10px; }
+        button { cursor: pointer; border: none; border-radius: 8px; font-weight: bold; }
+        .btn-add { background: var(--accent); color: white; padding: 10px 20px; }
+        .btn-print { background: var(--primary); color: white; width: 100%; padding: 15px; margin-top: 20px; font-size: 16px; }
+        .btn-del { background: none; color: #e74c3c; font-size: 18px; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @media print { .main-menu, .btn-main, .btn-del, .add-habit { display: none !important; } .card { box-shadow: none; border: 1px solid #eee; break-inside: avoid; } }
+        @media print { .add-habit, .btn-print, .btn-del { display: none !important; } }
     </style>
 </head>
 <body>
 
-    <h1>🌿 Mon Espace de Conscience</h1>
-    <p id="display-date" style="text-align: center; color: #7f8c8d; margin-top: -10px; margin-bottom: 20px; font-weight: bold;"></p>
-    
-    <div class="main-menu">
-        <button class="menu-btn active" onclick="openModule('module1', this)">Bilan (Partie 1)</button>
-        <button class="menu-btn" onclick="openModule('module2', this)">Leçons & Vision (Parties 2&3)</button>
-        <button class="menu-btn" onclick="openModule('module3', this)">Ma Sadhana</button>
+    <h1>🚀 Vision & Sadhana Consciente</h1>
+    <div class="date-badge" id="display-date">Chargement de la date...</div>
+
+    <div class="card">
+        <h2>Module 1 : Mes Buts de l'Année</h2>
+        <div class="field"><input type="text" id="g1" class="auto-save" placeholder="But 1"></div>
+        <div class="field"><input type="text" id="g2" class="auto-save" placeholder="But 2"></div>
+        <div class="field"><input type="text" id="g3" class="auto-save" placeholder="But 3"></div>
     </div>
 
-    <div id="module1" class="module active">
-        <div class="card">
-            <h2>Partie 1 : Bilan de l'année passée</h2>
-            <div id="bilan-dynamic"></div>
+    <div class="card">
+        <h2>Module 2 : Ma Sadhana du Jour</h2>
+        <div id="sadhana-list"></div>
+
+        <div class="add-habit">
+            <input type="text" id="new-habit" placeholder="Nouvelle pratique...">
+            <select id="habit-freq">
+                <option value="Quotidien">Quotidien</option>
+                <option value="Hebdo">Hebdo</option>
+            </select>
+            <button class="btn-add" onclick="addHabit()">Ajouter</button>
         </div>
     </div>
 
-    <div id="module2" class="module">
-        <div class="card">
-            <h2>Partie 2 : Tirer les leçons</h2>
-            <div class="field"><label>Mes plus grandes réussites cette année :</label><textarea id="l-r" class="auto-save" placeholder="Qu'est-ce qui m'a rendu fier ? Quelle victoire célébrer ?"></textarea></div>
-            <div class="field"><label>Qu'est-ce qui m'a fait du bien ?</label><textarea id="l-b" class="auto-save" placeholder="Lieux, rituels ou personnes qui ont nourri mon énergie..."></textarea></div>
-            <div class="field"><label>Impact pour les autres ou une cause :</label><textarea id="l-i" class="auto-save" placeholder="Qu'ai-je fait de bien pour autrui ou pour le monde ?"></textarea></div>
-            <div class="field"><label>Ce que j'aurais aimé éviter :</label><textarea id="l-e" class="auto-save" placeholder="Habitudes ou réactions qui m'ont coûté de l'énergie..."></textarea></div>
-            <div class="field"><label>Mes plus grands challenges :</label><textarea id="l-c" class="auto-save" placeholder="Quelles épreuves et comment m'ont-elles fait grandir ?"></textarea></div>
-            <div class="field"><label>Apprentissages sur moi-même :</label><textarea id="l-a" class="auto-save" placeholder="Nouvelle vérité découverte sur mon fonctionnement intérieur..."></textarea></div>
-        </div>
-        <div class="card">
-            <h2>Partie 3 : Intentions & Buts</h2>
-            <div class="field"><label>Le but essentiel de ma vie (Mission) :</label><textarea id="m-miss" class="auto-save"></textarea></div>
-            <div class="field"><label>Mes 3 buts à long terme (5-10 ans) :</label>
-                <input type="text" id="lt1" class="auto-save" style="margin-bottom:8px" placeholder="But 1">
-                <input type="text" id="lt2" class="auto-save" style="margin-bottom:8px" placeholder="But 2">
-                <input type="text" id="lt3" class="auto-save" placeholder="But 3">
-            </div>
-            <div class="field"><label>Mes 3 buts pour l'année à venir :</label>
-                <input type="text" id="ba1" class="auto-save" style="margin-bottom:8px; border-left: 3px solid var(--accent)" placeholder="Objectif Annuel 1">
-                <input type="text" id="ba2" class="auto-save" style="margin-bottom:8px; border-left: 3px solid var(--accent)" placeholder="Objectif Annuel 2">
-                <input type="text" id="ba3" class="auto-save" style="border-left: 3px solid var(--accent)" placeholder="Objectif Annuel 3">
-            </div>
-        </div>
-    </div>
-
-    <div id="module3" class="module">
-        <div class="card">
-            <h2>Ma Sadhana du jour</h2>
-            <div id="sadhana-list"></div>
-            <div class="add-habit" style="margin-top:20px; border-top:1px solid #eee; padding-top:20px;">
-                <label>Ajouter une nouvelle pratique :</label>
-                <input type="text" id="new-habit-name" placeholder="Ex: Cohérence cardiaque...">
-                <button class="btn-main btn-add" onclick="addHabit()">Ajouter à ma liste</button>
-            </div>
-        </div>
-    </div>
-
-    <button class="btn-main" onclick="window.print()" style="margin-bottom: 40px;">Exporter en PDF / Imprimer</button>
+    <button class="btn-print" onclick="window.print()">Exporter ma journée en PDF</button>
 
     <script>
-        const dateKey = new Date().toISOString().split('T')[0];
-        document.getElementById('display-date').innerText = new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        const dateKey = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
+        document.getElementById('display-date').innerText = today;
 
-        const guideData = [
-            { id: "sante", n: "🩺 Santé et bien-être", p: "équilibre général du corps, sommeil, vitalité, digestion, manifestations du stress, maladies ou au contraire grande forme" },
-            { id: "fin", n: "💰 Ressources et finances", p: "l'argent que j'ai gagné, les dépenses du quotidien et les dépenses imprévues, ma sérénité ou mon stress face à l'argent, les achats et investissements..." },
-            { id: "pro", n: "💼 Vie professionnelle et sociale", p
+        let habits = JSON.parse(localStorage.getItem('habits_v2')) || [];
+        let dailyStatus = JSON.parse(localStorage.getItem('status_' + dateKey)) || {};
+
+        function renderHabits() {
+            const list = document.getElementById('sadhana-list');
+            list.innerHTML = '';
+            
+            habits.forEach(h => {
+                const isDone = dailyStatus[h.id] || false;
+                const tagClass = h.freq === 'Quotidien' ? 'tag-daily' : 'tag-weekly';
+                
+                list.innerHTML += `
+                    <div class="sadhana-item ${isDone ? 'done' : ''}">
+                        <input type="checkbox" ${isDone ? 'checked' : ''} onclick="toggleHabit('${h.id}')">
+                        <span>${h.name} <span class="tag ${tagClass}">${h.freq}</span></span>
+                        <button class="btn-del" onclick="removeHabit('${h.id}')">✕</button>
+                    </div>
+                `;
+            });
+            localStorage.setItem('habits_v2', JSON.stringify(habits));
+            localStorage.setItem('status_' + dateKey, JSON.stringify(dailyStatus));
+        }
+
+        function addHabit() {
+            const name = document.getElementById('new-habit').value;
+            const freq = document.getElementById('habit-freq').value;
+            if(name) {
+                const id = 'h_' + Date.now();
+                habits.push({ id, name, freq });
+                document.getElementById('new-habit').value = '';
+                renderHabits();
+            }
+        }
+
+        function toggleHabit(id) {
+            dailyStatus[id] = !dailyStatus[id];
+            renderHabits();
+        }
+
+        function removeHabit(id) {
+            habits = habits.filter(h => h.id !== id);
+            delete dailyStatus[id];
+            renderHabits();
+        }
+
+        // Sauvegarde Module 1
+        document.querySelectorAll('.auto-save').forEach(input => {
+            input.value = localStorage.getItem(input.id) || '';
+            input.addEventListener('input', () => localStorage.setItem(input.id, input.value));
+        });
+
+        window.onload = renderHabits;
+    </script>
+</body>
+</html>
