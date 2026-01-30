@@ -3,148 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Choisir librement les buts de ma vie</title>
+    <title>Sadhana - Écologie Consciente</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 850px; margin: 0 auto; padding: 20px; background-color: #f0f2f5; }
-        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        h1 { color: #1a2a6c; text-align: center; font-size: 2.2em; margin-bottom: 10px; }
-        .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 30px; font-weight: bold; }
-        h2 { color: #b21f1f; border-left: 5px solid #fdbb2d; padding-left: 15px; margin-top: 0; }
+        :root { --primary: #1a2a6c; --secondary: #b21f1f; --accent: #27ae60; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; max-width: 850px; margin: 0 auto; padding: 20px; background: var(--bg); color: #333; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        h2 { color: var(--secondary); border-left: 5px solid #fdbb2d; padding-left: 15px; margin-top: 0; }
         
-        .header-fields { display: flex; gap: 20px; margin-bottom: 20px; }
-        .header-fields div { flex: 1; }
+        .grid-config { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .box { background: #f9f9f9; padding: 15px; border-radius: 10px; border: 1px solid #eee; }
+        label { font-weight: bold; display: block; margin-bottom: 8px; color: var(--primary); }
+        
+        select, input, button { width: 100%; padding: 10px; margin-bottom: 8px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; font-family: inherit; }
+        .btn-add { background: var(--accent); color: white; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-add:hover { opacity: 0.9; }
 
-        .field { margin-bottom: 20px; }
-        label { display: block; font-weight: bold; margin-bottom: 8px; color: #2c3e50; }
-        
-        .slider-container { display: flex; align-items: center; gap: 20px; background: #f9f9f9; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
-        input[type="range"] { flex-grow: 1; cursor: pointer; accent-color: #b21f1f; }
-        .note-display { font-weight: bold; color: #b21f1f; min-width: 30px; font-size: 1.2em; }
+        .time-title { font-weight: bold; color: #7f8c8d; text-transform: uppercase; font-size: 0.8em; margin: 25px 0 10px; border-bottom: 2px solid #eee; padding-bottom: 5px; }
+        .item { display: flex; align-items: center; background: white; padding: 12px; border-radius: 8px; border: 1px solid #eee; margin-bottom: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .item.done { background: #e8f5e9; border-color: var(--accent); }
+        .item span { flex: 1; margin-left: 12px; font-weight: 500; }
+        .item input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: var(--accent); }
+        .btn-del { width: auto; background: none; border: none; color: #e74c3c; cursor: pointer; font-weight: bold; font-size: 1.2em; padding: 0 10px; margin: 0; }
 
-        input[type="text"], input[type="date"], textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; font-family: inherit; }
-        textarea { height: 80px; resize: vertical; }
-        .goal-input { margin-bottom: 10px; border-left: 3px solid #3498db !important; }
-        
-        .actions { position: sticky; bottom: 20px; display: flex; gap: 10px; z-index: 100; }
-        button { flex: 1; color: white; padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.2s; }
-        .btn-print { background: linear-gradient(to right, #1a2a6c, #b21f1f); }
-        .btn-reset { background: #95a5a6; font-size: 14px; flex: 0.3; }
-        
-        @media print { 
-            .actions, .subtitle, .btn-reset { display: none !important; } 
-            body { background-color: white; padding: 0; }
-            .card { box-shadow: none; border: 1px solid #eee; break-inside: avoid; margin-bottom: 10px; padding: 20px; }
-            textarea { border: none; height: auto; padding: 0; }
-        }
+        .log { background: #2c3e50; color: white; padding: 25px; border-radius: 15px; margin-top: 40px; }
+        .log h3 { margin-top: 0; border-bottom: 1px solid #3e5871; padding-bottom: 10px; }
+        .log-date { color: #f1c40f; font-weight: bold; display: block; margin-top: 15px; font-size: 0.9em; }
+        .tag { background: var(--accent); color: white; padding: 3px 10px; border-radius: 4px; font-size: 0.8em; margin-right: 6px; display: inline-block; margin-top: 6px; }
     </style>
 </head>
 <body>
 
-    <h1>🚀 Bilan et buts personnels</h1>
-    <p class="subtitle">Module 1 : Bilan de l'année et Intentions</p>
-
     <div class="card">
-        <div class="header-fields">
-            <div><label>Prénom et Nom</label><input type="text" id="user-fullname" class="auto-save"></div>
-            <div><label>Date du bilan</label><input type="date" id="doc-date" class="auto-save"></div>
+        <h2>Je choisis ma sadhana</h2>
+        <p style="font-style: italic; color: #666; margin-top: -10px;">Pratiques tête, cœur, corps pour m'aligner.</p>
+        
+        <div class="grid-config" id="config-area">
+            </div>
+
+        <div id="display-area" style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 10px;">
+            <h3 id="date-now" style="text-align:center; color: var(--primary); text-transform: capitalize;"></h3>
+            <div id="list-matin"></div>
+            <div id="list-jour"></div>
+            <div id="list-soir"></div>
         </div>
     </div>
 
-    <div class="card">
-        <h2>1. Bilan des Domaines de Vie</h2>
-        <div id="bilan-secteur"></div>
-    </div>
-
-    <div class="card">
-        <h2>2. Leçons Apprises</h2>
-        <div class="field"><label>Mes plus grandes réussites :</label><textarea id="lessons-1" class="auto-save" placeholder="Qu'est-ce qui m'a rendu fier ?"></textarea></div>
-        <div class="field"><label>Ce qui m'a fait du bien :</label><textarea id="lessons-2" class="auto-save" placeholder="Activités, lieux, personnes ou rituels qui ont nourri mon énergie..."></textarea></div>
-        <div class="field"><label>Mon effet sur les autres :</label><textarea id="lessons-3" class="auto-save" placeholder="Ai-je été facteur de paix ou de stress ?"></textarea></div>
-        <div class="field"><label>Ce que j'aurais aimé éviter :</label><textarea id="lessons-4" class="auto-save" placeholder="Habitudes ou réactions qui ont amené du négatif pour moi ou pour les autres..."></textarea></div>
-        <div class="field"><label>Mes plus grands challenges :</label><textarea id="lessons-5" class="auto-save" placeholder="Comment m'ont-ils fait grandir ?"></textarea></div>
-        <div class="field"><label>Apprentissages sur moi-même :</label><textarea id="lessons-6" class="auto-save" placeholder="Qu'ai-je appris sur moi-même, à l'intérieur et à l'extérieur ?"></textarea></div>
-    </div>
-
-    <div class="card">
-        <h2>3. Mes Intentions & Buts</h2>
-        <div class="field"><label>Le but essentiel de ma vie :</label><textarea id="mission-life" class="auto-save" placeholder="Ta mission globale..."></textarea></div>
-        <div class="field"><label>Mes 3 buts à long terme (5-10 ans) :</label>
-            <input type="text" id="lt-goal-1" class="goal-input auto-save" placeholder="Vision 1">
-            <input type="text" id="lt-goal-2" class="goal-input auto-save" placeholder="Vision 2">
-            <input type="text" id="lt-goal-3" class="goal-input auto-save" placeholder="Vision 3">
-        </div>
-        <div class="field"><label>Mes 3 buts prioritaires pour l'année :</label>
-            <input type="text" id="yr-goal-1" class="goal-input auto-save" style="border-left-color:#27ae60!important;" placeholder="Objectif annuel 1">
-            <input type="text" id="yr-goal-2" class="goal-input auto-save" style="border-left-color:#27ae60!important;" placeholder="Objectif annuel 2">
-            <input type="text" id="yr-goal-3" class="goal-input auto-save" style="border-left-color:#27ae60!important;" placeholder="Objectif annuel 3">
-        </div>
-    </div>
-
-    <div class="actions">
-        <button class="btn-print" onclick="window.print()">Exporter en PDF</button>
-        <button class="btn-reset" onclick="resetApp()">Réinitialiser</button>
+    <div class="log">
+        <h3>📜 Historique des pratiques</h3>
+        <div id="log-content"></div>
     </div>
 
     <script>
-        // Correction des erreurs de guillemets ici :
-        const domaines = [
-            { n: "🩺 Santé et Équilibre", p: "Sommeil, vitalité, alimentation, stress..." },
-            { n: "💰 Argent et Finances", p: "Revenus et gains, dépenses, investissements et acahts importants, sérénité financière..." },
-            { n: "💼 Vie Professionnelle", p: "Épanouissement, rémunération, réalisations, relations, équilibre avec la vie perso..." },
-            { n: "🌹 Vie sentimentale et Couple", p: "Sentiments, sexualité, complicité, communication, projets à deux..." },
-            { n: "🏠 Famille", p: "Relations parents, enfants, climat au foyer..." },
-            { n: "🤝 Amis et Relations", p: "Soutien, partages, nouvelles rencontres..." },
-            { n: "🎨 Passions et Hobbys", p: "Activité physique, lien avec la nature, créativité, temps pour soi, ressourcement..." },
-            { n: "🧘 Vie intérieure et Spiritualité", p: "Silence, introspection, paix intérieure, méditation, yoga, rituels, prière, reliance..." }
-        ];
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            const periods = [
+                { id: 'matin', label: '☀️ MATIN' },
+                { id: 'jour', label: '🌤️ JOURNÉE' },
+                { id: 'soir', label: '🌙 SOIR' }
+            ];
+            
+            const activities = [
+                "Méditation", 
+                "Respiration consciente", 
+                "Mouvements en conscience", 
+                "Se relier à ce qui est plus grand", 
+                "Activité physique", 
+                "Journal spirituel", 
+                "Soin énergétique"
+            ];
 
-        const container = document.getElementById('bilan-secteur');
-
-        domaines.forEach((d, i) => {
-            container.innerHTML += `
-                <div class="field">
-                    <label>${d.n}</label>
-                    <div class="slider-container">
-                        <input type="range" min="1" max="10" value="5" id="range-${i}" class="auto-save" oninput="document.getElementById('val-${i}').innerText = this.value">
-                        <span class="note-display" id="val-${i}">5</span>
-                    </div>
-                    <textarea id="note-text-${i}" class="auto-save" placeholder="${d.p}"></textarea>
-                </div>`;
-        });
-
-        function loadAllData() {
-            document.querySelectorAll('.auto-save').forEach(input => {
-                const savedValue = localStorage.getItem(input.id);
-                if (savedValue !== null) {
-                    input.value = savedValue;
-                    if(input.type === 'range') {
-                        const idNum = input.id.split('-')[1];
-                        document.getElementById('val-' + idNum).innerText = savedValue;
-                    }
-                }
+            // 1. Génération des menus déroulants identiques
+            const configArea = document.getElementById('config-area');
+            periods.forEach(p => {
+                let options = activities.map(a => `<option value="${a}">${a}</option>`).join('');
+                configArea.innerHTML += `
+                    <div class="box">
+                        <label>${p.label}</label>
+                        <select id="s-${p.id}"><option value="">-- Liste --</option>${options}</select>
+                        <input type="text" id="i-${p.id}" placeholder="Ou autre pratique...">
+                        <button class="btn-add" onclick="add('${p.id}')">Ajouter</button>
+                    </div>`;
             });
-        }
 
-        function resetApp() {
-            if(confirm('Tout effacer définitivement ?')) {
-                localStorage.clear();
-                location.reload();
-            }
-        }
+            document.getElementById('date-now').innerText = new Date().toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'});
 
-        document.addEventListener('input', (e) => {
-            if (e.target.classList.contains('auto-save')) {
-                localStorage.setItem(e.target.id, e.target.value);
+            // 2. Fonctions Globales
+            window.add = function(p) {
+                const sel = document.getElementById('s-'+p);
+                const inp = document.getElementById('i-'+p);
+                const val = sel.value || inp.value;
+                if(val) {
+                    let struct = JSON.parse(localStorage.getItem('sad_v10')) || {matin:[], jour:[], soir:[]};
+                    struct[p].push({id: 'id' + Date.now(), name: val});
+                    localStorage.setItem('sad_v10', JSON.stringify(struct));
+                    sel.value = ''; inp.value = '';
+                    render();
+                }
+            };
+
+            window.remove = function(p, id) {
+                let struct = JSON.parse(localStorage.getItem('sad_v10'));
+                struct[p] = struct[p].filter(x => x.id !== id);
+                localStorage.setItem('sad_v10', JSON.stringify(struct));
+                render();
+            };
+
+            window.toggle = function(id) {
+                let chks = JSON.parse(localStorage.getItem('chks_'+today)) || {};
+                chks[id] = !chks[id];
+                localStorage.setItem('chks_'+today, JSON.stringify(chks));
+                saveToHistory();
+                render();
+            };
+
+            function saveToHistory() {
+                let struct = JSON.parse(localStorage.getItem('sad_v10')) || {matin:[], jour:[], soir:[]};
+                let chks = JSON.parse(localStorage.getItem('chks_'+today)) || {};
+                let hist = JSON.parse(localStorage.getItem('hist_v10')) || {};
+                let done = [];
+                [...struct.matin, ...struct.jour, ...struct.soir].forEach(i => { 
+                    if(chks[i.id]) done.push(i.name); 
+                });
+                if(done.length) hist[today] = done; else delete hist[today];
+                localStorage.setItem('hist_v10', JSON.stringify(hist));
             }
+
+            function render() {
+                let struct = JSON.parse(localStorage.getItem('sad_v10')) || {matin:[], jour:[], soir:[]};
+                let chks = JSON.parse(localStorage.getItem('chks_'+today)) || {};
+                
+                periods.forEach(p => {
+                    const cont = document.getElementById('list-'+p.id);
+                    cont.innerHTML = `<div class="time-title">${p.label}</div>`;
+                    struct[p.id].forEach(item => {
+                        const d = document.createElement('div');
+                        d.className = 'item' + (chks[item.id] ? ' done' : '');
+                        d.innerHTML = `
+                            <input type="checkbox" ${chks[item.id]?'checked':''} onchange="toggle('${item.id}')">
+                            <span>${item.name}</span>
+                            <button class="btn-del" onclick="remove('${p.id}','${item.id}')">✕</button>
+                        `;
+                        cont.appendChild(d);
+                    });
+                });
+                renderLog();
+            }
+
+            function renderLog() {
+                let hist = JSON.parse(localStorage.getItem('hist_v10')) || {};
+                const cont = document.getElementById('log-content');
+                cont.innerHTML = '';
+                Object.keys(hist).sort().reverse().forEach(d => {
+                    const dateObj = new Date(d);
+                    const formatted = dateObj.toLocaleDateString('fr-FR', {day:'numeric', month:'short'});
+                    cont.innerHTML += `<span class="log-date">${formatted} :</span>` + 
+                        hist[d].map(t => `<span class="tag">${t}</span>`).join('');
+                });
+            }
+
+            render();
         });
-
-        window.onload = () => {
-            loadAllData();
-            if(!document.getElementById('doc-date').value) {
-                document.getElementById('doc-date').valueAsDate = new Date();
-            }
-        };
     </script>
 </body>
 </html>
-
